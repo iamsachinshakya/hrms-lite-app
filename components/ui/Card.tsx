@@ -1,5 +1,3 @@
-import React from "react";
-
 interface CardProps {
   children: React.ReactNode;
   className?: string;
@@ -7,7 +5,12 @@ interface CardProps {
   padding?: string | number;
 }
 
-export const Card = ({ children, className = "", style, padding = 22 }: CardProps) => {
+export const Card = ({
+  children,
+  className = "",
+  style,
+  padding = 22,
+}: CardProps) => {
   return (
     <div
       className={`card ${className}`}

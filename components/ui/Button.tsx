@@ -1,5 +1,4 @@
-import React from "react";
-import { Icon, IconName } from "./Icon";
+import { Icon, IconName } from "@/components/ui/Icon";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger" | "success" | "ghost";

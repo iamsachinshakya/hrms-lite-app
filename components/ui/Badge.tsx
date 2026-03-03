@@ -1,5 +1,3 @@
-import React from "react";
-
 interface BadgeProps {
   children: React.ReactNode;
   variant?: "success" | "danger" | "warning" | "info" | "neutral";
@@ -7,7 +5,12 @@ interface BadgeProps {
   className?: string;
 }
 
-export const Badge = ({ children, variant = "neutral", style, className = "" }: BadgeProps) => {
+export const Badge = ({
+  children,
+  variant = "neutral",
+  style,
+  className = "",
+}: BadgeProps) => {
   const getColors = () => {
     switch (variant) {
       case "success":
@@ -24,16 +27,18 @@ export const Badge = ({ children, variant = "neutral", style, className = "" }: 
   };
 
   return (
-    <span
-      className={`badge ${className}`}
-      style={{ ...getColors(), ...style }}
-    >
+    <span className={`badge ${className}`} style={{ ...getColors(), ...style }}>
       {children}
     </span>
   );
 };
 
-export const Chip = ({ children, variant = "neutral", style, className = "" }: BadgeProps) => {
+export const Chip = ({
+  children,
+  variant = "neutral",
+  style,
+  className = "",
+}: BadgeProps) => {
   const getColors = () => {
     switch (variant) {
       case "success":
@@ -50,10 +55,7 @@ export const Chip = ({ children, variant = "neutral", style, className = "" }: B
   };
 
   return (
-    <span
-      className={`chip ${className}`}
-      style={{ ...getColors(), ...style }}
-    >
+    <span className={`chip ${className}`} style={{ ...getColors(), ...style }}>
       {children}
     </span>
   );

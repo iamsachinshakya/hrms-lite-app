@@ -1,15 +1,19 @@
-import React from "react";
-
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   label?: string;
 }
 
-export const Input = ({ label, error, className = "", style, ...props }: InputProps) => {
+export const Input = ({
+  label,
+  error,
+  className = "",
+  style,
+  ...props
+}: InputProps) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
+    <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label style={{ fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
+        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">
           {label}
         </label>
       )}
@@ -18,9 +22,7 @@ export const Input = ({ label, error, className = "", style, ...props }: InputPr
         style={style}
         {...props}
       />
-      {error && (
-        <span style={{ fontSize: 11, color: "#ef4444" }}>{error}</span>
-      )}
+      {error && <span className="text-[11px] font-medium text-red-400 px-1 animate-fade-in">{error}</span>}
     </div>
   );
 };
@@ -31,28 +33,38 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: string;
 }
 
-export const Select = ({ label, options, error, className = "", style, ...props }: SelectProps) => {
+export const Select = ({
+  label,
+  options,
+  error,
+  className = "",
+  style,
+  ...props
+}: SelectProps) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
+    <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label style={{ fontSize: 12, fontWeight: 500, color: "#94a3b8" }}>
+        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-1">
           {label}
         </label>
       )}
-      <select
-        className={`inp ${error ? "err" : ""} ${className}`}
-        style={style}
-        {...props}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      {error && (
-        <span style={{ fontSize: 11, color: "#ef4444" }}>{error}</span>
-      )}
+      <div className="relative">
+        <select
+          className={`inp appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em] pr-10 ${error ? "err" : ""} ${className}`}
+          style={{
+            ...style,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`
+          }}
+          {...props}
+        >
+          {options.map((opt: { label: string; value: string }) => (
+            <option key={opt.value} value={opt.value} className="bg-[#0f172a] text-white">
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      {error && <span className="text-[11px] font-medium text-red-400 px-1 animate-fade-in">{error}</span>}
     </div>
   );
 };

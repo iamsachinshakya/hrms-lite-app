@@ -1,7 +1,6 @@
-import React from "react";
-import { Select, Input } from "../../../components/ui/Input";
-import { Employee } from "../../../types";
-import { Icon } from "../../../components/ui/Icon";
+import { Icon } from "@/components/ui/Icon";
+import { Input, Select } from "@/components/ui/Input";
+import { Employee } from "@/types";
 
 interface AttendanceFiltersProps {
   fFrom: string;
@@ -31,64 +30,57 @@ export const AttendanceFilters = ({
   hasFilters,
 }: AttendanceFiltersProps) => {
   return (
-    <div className="filter-row" style={{ marginBottom: 20 }}>
-      <div className="filter-field">
+    <div className="flex flex-wrap gap-4 items-end mb-8 bg-white/[0.02] border border-white/[0.05] p-5 rounded-3xl animate-fade-in backdrop-blur-md shadow-xl">
+      <div className="flex flex-col gap-1.5 flex-1 min-w-[140px]">
         <Input
           label="From Date"
           type="date"
+          className="!bg-white/[0.03] !border-white/10 hover:!border-white/20 focus:!border-indigo-500/50 transition-all"
           value={fFrom}
           onChange={(e) => setFFrom(e.target.value)}
         />
       </div>
-      <div className="filter-field">
+      <div className="flex flex-col gap-1.5 flex-1 min-w-[140px]">
         <Input
           label="To Date"
           type="date"
+          className="!bg-white/[0.03] !border-white/10 hover:!border-white/20 focus:!border-indigo-500/50 transition-all"
           value={fTo}
           onChange={(e) => setFTo(e.target.value)}
         />
       </div>
-      <div className="filter-field">
+      <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
         <Select
-          label="Employee"
+          label="Filter by Employee"
           options={[
-            { label: "All Employees", value: "all" },
+            { label: "All Members", value: "all" },
             ...employees.map((e) => ({ label: e.name, value: e.id })),
           ]}
           value={fEmp}
           onChange={(e) => setFEmp(e.target.value)}
+          className="!bg-white/[0.03] !border-white/10 hover:!border-white/20 focus:!border-indigo-500/50 transition-all"
         />
       </div>
-      <div className="filter-field">
+      <div className="flex flex-col gap-1.5 flex-1 min-w-[140px]">
         <Select
           label="Status"
           options={[
-            { label: "All Status", value: "all" },
+            { label: "Any Status", value: "all" },
             { label: "Present", value: "Present" },
             { label: "Absent", value: "Absent" },
           ]}
           value={fStat}
           onChange={(e) => setFStat(e.target.value)}
+          className="!bg-white/[0.03] !border-white/10 hover:!border-white/20 focus:!border-indigo-500/50 transition-all"
         />
       </div>
       {hasFilters && (
         <button
           onClick={onClear}
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "none",
-            color: "#94a3b8",
-            padding: "10px 14px",
-            borderRadius: 10,
-            cursor: "pointer",
-            fontSize: 13,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            height: 41,
-          }}
+          className="bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 px-5 py-2.5 rounded-2xl cursor-pointer text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 h-[46px] transition-all active:scale-95 shadow-lg group"
         >
-          <Icon name="x" size={12} /> Clear
+          <Icon name="x" size={14} className="group-hover:rotate-90 transition-transform duration-300" /> 
+          Reset Filters
         </button>
       )}
     </div>

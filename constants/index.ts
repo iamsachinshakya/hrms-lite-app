@@ -1,4 +1,4 @@
-import { Employee, AttendanceRecord } from "../types";
+import { AttendanceRecord, Employee } from "@/types";
 
 export const INITIAL_EMPLOYEES: Employee[] = [
     {

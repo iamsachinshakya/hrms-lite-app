@@ -1,10 +1,9 @@
-import React from "react";
-import { Employee, AttendanceRecord, ChartData } from "../../../types";
-import { DEPT_COLORS } from "../../../constants";
-import { Card } from "../../../components/ui/Card";
-import { Icon } from "../../../components/ui/Icon";
-import { DonutChart, MiniBar } from "../../../components/ui/Charts";
-import { Badge } from "../../../components/ui/Badge";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { DonutChart, MiniBar } from "@/components/ui/Charts";
+import { Icon } from "@/components/ui/Icon";
+import { DEPT_COLORS } from "@/constants";
+import { AttendanceRecord, ChartData, Employee } from "@/types";
 
 interface OverviewSummaryProps {
   employees: Employee[];
@@ -25,90 +24,119 @@ export const OverviewSummary = ({
 }: OverviewSummaryProps) => {
   return (
     <>
-      <div className="summary-grid" style={{ marginBottom: 24 }}>
-        <Card style={{ padding: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-            <div style={{ background: "#6366f122", color: "#818cf8", padding: 7, borderRadius: 8 }}>
-              <Icon name="dept" size={13} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <Card className="p-6 card hover-lift animate-slide-up [animation-delay:100ms]">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-indigo-500/20 text-indigo-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 border border-indigo-500/20">
+              <Icon name="dept" size={14} />
             </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>Department Distribution</span>
+            <span className="font-syne font-extrabold text-[15px] tracking-tight text-slate-100">
+              Department Distribution
+            </span>
           </div>
-          <DonutChart data={deptSummary} />
+          <div className="p-2">
+            <DonutChart data={deptSummary} />
+          </div>
         </Card>
 
-        <Card style={{ padding: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-            <div style={{ background: "#10b98122", color: "#10b981", padding: 7, borderRadius: 8 }}>
-              <Icon name="calendar" size={13} />
+        <Card className="p-6 card hover-lift animate-slide-up [animation-delay:200ms]">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-emerald-500/20 text-emerald-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
+              <Icon name="calendar" size={14} />
             </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>All-Time Attendance</span>
+            <span className="font-syne font-extrabold text-[15px] tracking-tight text-slate-100">
+              All-Time Attendance
+            </span>
           </div>
-          <DonutChart
-            data={[
-              {
-                label: "Present",
-                value: attendance.filter((a) => a.status === "Present").length,
-                color: "#10b981",
-              },
-              {
-                label: "Absent",
-                value: attendance.filter((a) => a.status === "Absent").length,
-                color: "#ef4444",
-              },
-            ]}
-          />
+          <div className="p-2">
+            <DonutChart
+              data={[
+                {
+                  label: "Present",
+                  value: attendance.filter((a) => a.status === "Present").length,
+                  color: "#10b981",
+                },
+                {
+                  label: "Absent",
+                  value: attendance.filter((a) => a.status === "Absent").length,
+                  color: "#f43f5e",
+                },
+              ]}
+            />
+          </div>
         </Card>
       </div>
 
-      <Card style={{ padding: 22, marginBottom: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-          <div style={{ background: "#f59e0b22", color: "#f59e0b", padding: 7, borderRadius: 8 }}>
-            <Icon name="star" size={13} />
+      <Card className="p-6 mb-8 card animate-slide-up [animation-delay:300ms]">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="bg-amber-500/20 text-amber-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/10 border border-amber-500/20">
+            <Icon name="star" size={14} />
           </div>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>Total Present Days — All Employees</span>
+          <span className="font-syne font-extrabold text-[15px] tracking-tight text-slate-100">
+            Performance Overview <span className="text-slate-500 mx-1">—</span> Total Present Days
+          </span>
         </div>
-        <div className="emp-grid">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {employees.map((emp) => {
             const days = presentDaysMap[emp.id] || 0;
-            const total = attendance.filter((a) => a.employeeId === emp.id).length;
+            const total = attendance.filter(
+              (a) => a.employeeId === emp.id,
+            ).length;
             const rate = total > 0 ? Math.round((days / total) * 100) : 0;
             const deptColor = DEPT_COLORS[emp.department] || "#6366f1";
 
             return (
               <div
                 key={emp.id}
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  borderRadius: 12,
-                  padding: "14px 16px",
-                }}
+                className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 transition-all duration-300 hover:bg-white/[0.06] hover:border-white/[0.12] group"
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <div className="flex items-center gap-3 mb-3">
                   <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-[15px] font-extrabold shrink-0 shadow-lg group-hover:scale-105 transition-transform"
                     style={{
-                      width: 34,
-                      height: 34,
-                      borderRadius: "50%",
-                      background: `linear-gradient(135deg,${deptColor},${deptColor}88)`,
-                      display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0
+                      background: `linear-gradient(135deg,${deptColor},${deptColor}aa)`,
+                      boxShadow: `0 4px 12px ${deptColor}33`
                     }}
                   >
                     {emp.name.charAt(0)}
                   </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{emp.name}</div>
-                    <div style={{ fontSize: 10, color: "#64748b" }}>{emp.department}</div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[14px] truncate text-slate-100">
+                      {emp.name}
+                    </div>
+                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                      {emp.department}
+                    </div>
                   </div>
-                  <div style={{ marginLeft: "auto", textAlign: "right", flexShrink: 0 }}>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 20, color: "#f1f5f9", lineHeight: 1 }}>{days}</div>
-                    <div style={{ fontSize: 9, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>days</div>
+                  <div className="ml-auto text-right shrink-0">
+                    <div className="font-syne font-extrabold text-2xl text-white leading-none">
+                      {days}
+                    </div>
+                    <div className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em]">
+                      days
+                    </div>
                   </div>
                 </div>
-                <MiniBar pct={Math.round((days / maxPresent) * 100)} color={deptColor} />
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-                  <span style={{ fontSize: 10, color: "#475569" }}>{total} records</span>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: rate >= 80 ? "#10b981" : rate >= 50 ? "#f59e0b" : "#ef4444" }}>{rate}% rate</span>
+                
+                <div className="space-y-2">
+                  <MiniBar
+                    pct={Math.round((days / maxPresent) * 100)}
+                    color={deptColor}
+                  />
+                  <div className="flex justify-between items-center px-0.5">
+                    <span className="text-[10px] text-slate-500 font-bold">
+                      {total} records
+                    </span>
+                    <span
+                      className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
+                      style={{
+                        background: rate >= 80 ? "#10b98122" : rate >= 50 ? "#f59e0b22" : "#f43f5e22",
+                        color: rate >= 80 ? "#10b981" : rate >= 50 ? "#f59e0b" : "#f43f5e",
+                      }}
+                    >
+                      {rate}% rate
+                    </span>
+                  </div>
                 </div>
               </div>
             );
@@ -116,53 +144,72 @@ export const OverviewSummary = ({
         </div>
       </Card>
 
-      <Card style={{ padding: 22 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ background: "#3b82f622", color: "#3b82f6", padding: 7, borderRadius: 8 }}>
-              <Icon name="trend" size={13} />
+      <Card className="p-6 card animate-slide-up [animation-delay:400ms]">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-500/20 text-blue-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/10 border border-blue-500/20">
+              <Icon name="trend" size={14} />
             </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>Recent Activity</span>
+            <span className="font-syne font-extrabold text-[15px] tracking-tight text-slate-100">
+              Recent Activity Feed
+            </span>
           </div>
           <button
             onClick={onViewAllAttendance}
-            style={{ background: "none", border: "none", color: "#6366f1", fontSize: 12, cursor: "pointer", fontWeight: 600 }}
+            className="text-primary text-[12px] cursor-pointer font-bold uppercase tracking-wider hover:underline flex items-center gap-1.5 group"
           >
-            View all →
+            View all <span className="group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {[...attendance].reverse().slice(0, 5).map((rec, i) => {
-            const emp = employees.find((e) => e.id === rec.employeeId);
-            const deptColor = DEPT_COLORS[emp?.department || ""] || "#6366f1";
-            return (
-              <div
-                key={i}
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "rgba(255,255,255,0.025)", borderRadius: 10
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-                  <div
-                    style={{
-                      width: 30, height: 30, borderRadius: "50%", background: deptColor + "33", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: deptColor, flexShrink: 0
-                    }}
+        <div className="flex flex-col gap-3">
+          {[...attendance]
+            .reverse()
+            .slice(0, 5)
+            .map((rec, i) => {
+              const emp = employees.find((e) => e.id === rec.employeeId);
+              const deptColor = DEPT_COLORS[emp?.department || ""] || "#6366f1";
+              return (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 px-4 bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.04] rounded-2xl transition-all duration-300"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shrink-0 shadow-inner"
+                      style={{
+                        background: deptColor + "15",
+                        border: `1px solid ${deptColor}22`,
+                        color: deptColor,
+                      }}
+                    >
+                      {emp?.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[14px] font-bold text-slate-200 truncate">
+                        {emp?.name}
+                      </div>
+                      <div className="text-[11px] text-slate-500 font-medium">
+                        {new Date(rec.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric"
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <Badge
+                    variant={rec.status === "Present" ? "success" : "danger"}
+                    className="!py-1 !px-3 shadow-lg"
                   >
-                    {emp?.name.charAt(0)}
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{emp?.name}</div>
-                    <div style={{ fontSize: 11, color: "#64748b" }}>{new Date(rec.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</div>
-                  </div>
+                    {rec.status === "Present" ? "● Present" : "○ Absent"}
+                  </Badge>
                 </div>
-                <Badge variant={rec.status === "Present" ? "success" : "danger"}>
-                  {rec.status === "Present" ? "● Present" : "○ Absent"}
-                </Badge>
-              </div>
-            );
-          })}
+              );
+            })}
           {attendance.length === 0 && (
-            <div style={{ textAlign: "center", color: "#475569", fontSize: 13, padding: "24px 0" }}>No records yet.</div>
+            <div className="text-center text-slate-400 text-[14px] py-10 opacity-50 italic">
+              No recent records found...
+            </div>
           )}
         </div>
       </Card>

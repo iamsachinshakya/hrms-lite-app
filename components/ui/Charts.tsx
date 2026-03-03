@@ -1,5 +1,4 @@
-import React from "react";
-import { ChartData } from "../../types";
+import { ChartData } from "@/types";
 
 export const MiniBar = ({ pct, color }: { pct: number; color: string }) => (
   <div

@@ -15,7 +15,6 @@ import { useWindowWidth } from "../hooks/useWindowWidth";
 import {
   INITIAL_EMPLOYEES,
   INITIAL_ATTENDANCE,
-  DEPARTMENTS,
 } from "../constants";
 import {
   Employee,
@@ -81,7 +80,6 @@ export default function Dashboard() {
       map[e.department] = (map[e.department] || 0) + 1;
     });
     
-    // This assumes colors are handled in UI/Constants as before
     const DEPT_COLORS: Record<string, string> = {
       Engineering: "#6366f1",
       Design: "#ec4899",
@@ -150,8 +148,6 @@ export default function Dashboard() {
     showToast(`${data.status} marked for ${emp?.name}`);
   };
 
-  const PAD = isMobile ? "0 16px" : isTablet ? "0 24px" : "0 40px";
-
   const stats = [
     {
       label: "Total Employees",
@@ -184,55 +180,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#080c14",
-        color: "#f1f5f9",
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{background:#080c14}
-        .inp{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#f1f5f9;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;width:100%;transition:border-color 0.2s}
-        .inp:focus{border-color:#6366f1}
-        .inp.err{border-color:#ef4444}
-        select.inp option{background:#1e293b}
-        .inp[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.4);cursor:pointer}
-        .rh:hover{background:rgba(255,255,255,0.028)!important}
-        .del-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;padding:6px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center}
-        .del-btn:hover{background:rgba(239,68,68,0.22)}
-        .btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;padding:10px 18px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity 0.2s;white-space:nowrap}
-        .btn-p:hover{opacity:0.85}
-        .btn-g{background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;padding:10px 188;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity 0.2s;white-space:nowrap}
-        .btn-g:hover{opacity:0.85}
-        .mbg{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
-        .modal{background:#0d1a2d;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;width:440px;max-width:100%}
-        .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.04em}
-        .chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600}
-        .card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px}
-        .toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;z-index:300;animation:up 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:300px}
-        @keyframes up{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
-        .scrollable{overflow-x:auto}
-        .scrollable::-webkit-scrollbar{height:4px}
-        .scrollable::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
-        .stat-grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-        @media(min-width:768px){.stat-grid{grid-template-columns:repeat(4,1fr)}}
-        .summary-grid{display:grid;gap:16px;grid-template-columns:1fr}
-        @media(min-width:768px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
-        .emp-grid{display:grid;gap:12px;grid-template-columns:1fr}
-        @media(min-width:640px){.emp-grid{grid-template-columns:repeat(2,1fr)}}
-        @media(min-width:1024px){.emp-grid{grid-template-columns:repeat(3,1fr)}}
-        .filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
-        .filter-field{display:flex;flex-direction:column;gap:4px;flex:1 1 130px;min-width:110px}
-        .tab-btn{background:transparent;border:none;cursor:pointer;padding:9px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;display:flex;align-items:center;gap:7px;transition:all 0.2s;white-space:nowrap}
-        .tab-btn.on{background:rgba(99,102,241,0.18);color:#818cf8}
-        .tab-btn.off{color:#64748b}
-        .tab-btn.off:hover{color:#94a3b8;background:rgba(255,255,255,0.04)}
-      `}</style>
-
+    <div className="min-h-screen bg-[#06090f] text-[#f1f5f9] font-['Inter',sans-serif] selection:bg-indigo-500/30">
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -241,128 +189,114 @@ export default function Dashboard() {
         setMobileNav={setMobileNav}
         onAddEmployee={() => setShowAddEmp(true)}
         onMarkAttendance={() => setShowAtt(true)}
-        pad={PAD}
       />
 
-      <main
-        style={{
-          maxWidth: 1280,
-          margin: "0 auto",
-          padding: `30px ${isMobile ? "16px" : isTablet ? "24px" : "40px"}`,
-        }}
-      >
-        <div style={{ marginBottom: 24 }}>
-          <h1
-            style={{
-              fontFamily: "'Syne',sans-serif",
-              fontWeight: 800,
-              fontSize: isMobile ? 22 : 28,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.1,
-              marginBottom: 4,
-            }}
-          >
-            {activeTab === "overview" && (
-              <>
-                <span style={{ color: "#6366f1" }}>Dashboard</span> Overview
-              </>
-            )}
-            {activeTab === "employees" && (
-              <>
-                Employee <span style={{ color: "#6366f1" }}>Management</span>
-              </>
-            )}
-            {activeTab === "attendance" && (
-              <>
-                Attendance <span style={{ color: "#10b981" }}>Tracker</span>
-              </>
-            )}
-          </h1>
-          <p style={{ color: "#64748b", fontSize: 13 }}>
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </p>
+      <main className="max-w-[1400px] mx-auto py-10 px-4 sm:px-8 lg:px-12">
+        <div className="mb-10 animate-slide-up">
+          <div className="flex flex-col gap-1">
+            <h1 className="font-syne font-extrabold text-3xl sm:text-4xl tracking-tight leading-tight">
+              {activeTab === "overview" && (
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-[length:200%_auto] animate-gradient">
+                  Dashboard Intelligence
+                </span>
+              )}
+              {activeTab === "employees" && (
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 bg-[length:200%_auto] animate-gradient">
+                  Workforce Directory
+                </span>
+              )}
+              {activeTab === "attendance" && (
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400 bg-[length:200%_auto] animate-gradient">
+                  Attendance Records
+                </span>
+              )}
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+              <p className="text-slate-500 text-[13px] font-bold uppercase tracking-[0.2em]">
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <StatsGrid stats={stats} isMobile={isMobile} />
+        <div className="animate-slide-up [animation-delay:100ms]">
+          <StatsGrid stats={stats} isMobile={isMobile} />
+        </div>
 
-        {activeTab === "overview" && (
-          <OverviewSummary
-            employees={employees}
-            attendance={attendance}
-            deptSummary={deptSummary}
-            presentDaysMap={presentDaysMap}
-            maxPresent={maxPresent}
-            onViewAllAttendance={() => setActiveTab("attendance")}
-          />
-        )}
-
-        {activeTab === "employees" && (
-          <>
-            <div style={{ marginBottom: 14, position: "relative" }}>
-              <span
-                style={{
-                  position: "absolute",
-                  left: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#64748b",
-                  zIndex: 1,
-                }}
-              >
-                <Icon name="search" size={14} />
-              </span>
-              <input
-                className="inp"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by name, ID or department…"
-                style={{ paddingLeft: 38 }}
-              />
-            </div>
-
-            <EmployeeList
-              employees={filteredEmployees}
+        <div className="mt-10">
+          {activeTab === "overview" && (
+            <OverviewSummary
+              employees={employees}
+              attendance={attendance}
+              deptSummary={deptSummary}
               presentDaysMap={presentDaysMap}
               maxPresent={maxPresent}
-              onDelete={onDeleteEmployee}
-              isMobile={isMobile}
-              isTablet={isTablet}
+              onViewAllAttendance={() => setActiveTab("attendance")}
             />
-          </>
-        )}
+          )}
 
-        {activeTab === "attendance" && (
-          <>
-            <AttendanceFilters
-              fFrom={fFrom}
-              setFFrom={setFFrom}
-              fTo={fTo}
-              setFTo={setFTo}
-              fEmp={fEmp}
-              setFEmp={setFEmp}
-              fStat={fStat}
-              setFStat={setFStat}
-              employees={employees}
-              onClear={() => {
-                setFFrom("");
-                setFTo("");
-                setFEmp("all");
-                setFStat("all");
-              }}
-              hasFilters={hasFilters}
-            />
+          {activeTab === "employees" && (
+            <div className="animate-slide-up [animation-delay:200ms]">
+              <div className="mb-6 relative group">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10 transition-colors group-focus-within:text-indigo-400">
+                  <Icon name="search" size={18} />
+                </span>
+                <input
+                  className="inp pl-12 h-14 !rounded-2xl !bg-white/[0.03] !border-white/[0.05] hover:!border-white/10 focus:!border-indigo-500/50 focus:!bg-white/[0.05] transition-all shadow-xl"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search members by name, ID or department..."
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                  <span className="text-[10px] font-bold bg-white/10 px-1.5 py-0.5 rounded border border-white/10">ESC</span>
+                </div>
+              </div>
 
-            <AttendanceList
-              attendance={filteredAttendance}
-              employees={employees}
-            />
-          </>
-        )}
+              <EmployeeList
+                employees={filteredEmployees}
+                presentDaysMap={presentDaysMap}
+                maxPresent={maxPresent}
+                onDelete={onDeleteEmployee}
+                isMobile={isMobile}
+                isTablet={isTablet}
+              />
+            </div>
+          )}
+
+          {activeTab === "attendance" && (
+            <div className="animate-slide-up [animation-delay:200ms]">
+              <AttendanceFilters
+                fFrom={fFrom}
+                setFFrom={setFFrom}
+                fTo={fTo}
+                setFTo={setFTo}
+                fEmp={fEmp}
+                setFEmp={setFEmp}
+                fStat={fStat}
+                setFStat={setFStat}
+                employees={employees}
+                onClear={() => {
+                  setFFrom("");
+                  setFTo("");
+                  setFEmp("all");
+                  setFStat("all");
+                }}
+                hasFilters={hasFilters}
+              />
+
+              <AttendanceList
+                attendance={filteredAttendance}
+                employees={employees}
+              />
+            </div>
+          )}
+        </div>
       </main>
 
       <AddEmployeeModal

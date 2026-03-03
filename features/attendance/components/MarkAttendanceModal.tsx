@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Modal } from "../../../components/ui/Modal";
-import { Select, Input } from "../../../components/ui/Input";
-import { Button } from "../../../components/ui/Button";
-import { Employee } from "../../../types";
+import { Button } from "@/components/ui/Button";
+import { Input, Select } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
+import { Employee } from "@/types";
+import { useState } from "react";
 
 interface MarkAttendanceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onMark: (data: { employeeId: string; date: string; status: "Present" | "Absent" }) => void;
+  onMark: (data: {
+    employeeId: string;
+    date: string;
+    status: "Present" | "Absent";
+  }) => void;
   employees: Employee[];
 }
 
@@ -37,12 +41,15 @@ export const MarkAttendanceModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Mark Attendance">
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div className="flex flex-col gap-4">
         <Select
           label="Select Employee"
           options={[
             { label: "Choose an employee...", value: "" },
-            ...employees.map((e) => ({ label: `${e.name} (${e.id})`, value: e.id })),
+            ...employees.map((e) => ({
+              label: `${e.name} (${e.id})`,
+              value: e.id,
+            })),
           ]}
           value={form.employeeId}
           onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
@@ -63,18 +70,18 @@ export const MarkAttendanceModal = ({
           value={form.status}
           onChange={(e) => setForm({ ...form, status: e.target.value as any })}
         />
-        <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <div className="flex gap-3 mt-2">
           <Button
             variant="ghost"
             onClick={onClose}
-            style={{ flex: 1, justifyContent: "center" }}
+            className="flex-1 justify-center"
           >
             Cancel
           </Button>
           <Button
             variant="success"
             onClick={handleSubmit}
-            style={{ flex: 1, justifyContent: "center" }}
+            className="flex-1 justify-center"
             icon="check"
           >
             Confirm

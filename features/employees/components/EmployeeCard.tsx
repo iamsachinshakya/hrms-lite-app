@@ -1,11 +1,10 @@
-import React from "react";
-import { Employee } from "../../../types";
-import { DEPT_COLORS } from "../../../constants";
-import { Card } from "../../../components/ui/Card";
-import { Icon } from "../../../components/ui/Icon";
-import { Chip } from "../../../components/ui/Badge";
-import { MiniBar } from "../../../components/ui/Charts";
-import { Button } from "../../../components/ui/Button";
+import { Chip } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { MiniBar } from "@/components/ui/Charts";
+import { Icon } from "@/components/ui/Icon";
+import { DEPT_COLORS } from "@/constants";
+import { Employee } from "@/types";
 
 interface EmployeeCardProps {
   employee: Employee;
@@ -25,135 +24,65 @@ export const EmployeeCard = ({
   const deptColor = DEPT_COLORS[employee.department] || "#6366f1";
 
   return (
-    <Card style={{ padding: 16 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 10,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <Card className="p-5 card hover-lift animate-fade-in flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <div
+            className="w-11 h-11 rounded-xl flex items-center justify-center text-base font-extrabold text-white shadow-lg shadow-black/20"
             style={{
-              width: 38,
-              height: 38,
-              borderRadius: "50%",
               background: `linear-gradient(135deg,${deptColor},${deptColor}88)`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 14,
-              fontWeight: 800,
             }}
           >
             {employee.name.charAt(0)}
           </div>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 14 }}>{employee.name}</div>
-            <div
-              style={{
-                fontFamily: "'Syne',sans-serif",
-                fontWeight: 700,
-                fontSize: 11,
-                color: "#818cf8",
-              }}
-            >
-              {employee.id}
+          <div className="flex flex-col">
+            <div className="font-bold text-[15px] leading-tight text-slate-100 group-hover:text-white transition-colors">
+              {employee.name}
+            </div>
+            <div className="font-syne font-bold text-[11px] text-indigo-400/80 mt-0.5 tracking-tight">
+              #{employee.id}
             </div>
           </div>
         </div>
-        <Button variant="danger" onClick={() => onDelete(employee.id)} style={{ padding: "6px 10px", borderRadius: 8 }}>
-          <Icon name="trash" size={13} />
-        </Button>
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 8,
-          marginBottom: 10,
-        }}
-      >
-        <div
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            borderRadius: 8,
-            padding: "8px 10px",
-          }}
+        <button
+          onClick={() => onDelete(employee.id)}
+          className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95 border border-red-500/10"
         >
-          <div
-            style={{
-              fontSize: 9,
-              color: "#64748b",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              marginBottom: 3,
-              fontWeight: 600,
-            }}
-          >
-            Email
+          <Icon name="trash" size={16} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex flex-col gap-1 shadow-inner">
+          <div className="text-[10px] text-slate-500 uppercase tracking-[0.12em] font-extrabold">
+            Contact Info
           </div>
-          <div
-            style={{
-              fontSize: 11,
-              color: "#94a3b8",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
+          <div className="text-[12px] text-slate-300 font-medium truncate">
             {employee.email}
           </div>
         </div>
-        <div
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            borderRadius: 8,
-            padding: "8px 10px",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 9,
-              color: "#64748b",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              marginBottom: 4,
-              fontWeight: 600,
-            }}
-          >
-            Dept
+        <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex flex-col gap-1 shadow-inner">
+          <div className="text-[10px] text-slate-500 uppercase tracking-[0.12em] font-extrabold">
+            Sub-Department
           </div>
-          <Chip
-            style={{
-              background: deptColor + "22",
-              color: deptColor.length > 7 ? deptColor : deptColor, // simple mock logic for color
-            }}
+          <div 
+            className="text-[11px] font-bold uppercase tracking-wider truncate"
+            style={{ color: deptColor }}
           >
             {employee.department}
-          </Chip>
+          </div>
         </div>
       </div>
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: 5,
-          }}
-        >
-          <span style={{ fontSize: 10, color: "#64748b" }}>Present days</span>
-          <span
-            style={{
-              fontFamily: "'Syne',sans-serif",
-              fontWeight: 700,
-              fontSize: 12,
-            }}
-          >
-            {presentDays}
-          </span>
+
+      <div className="space-y-2 mt-1">
+        <div className="flex justify-between items-center px-1">
+          <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wide">Activity Level</span>
+          <div className="flex items-baseline gap-1">
+            <span className="font-syne font-extrabold text-base text-white">
+              {presentDays}
+            </span>
+            <span className="text-[10px] text-slate-500 font-bold uppercase">Days</span>
+          </div>
         </div>
         <MiniBar
           pct={Math.round((presentDays / maxPresent) * 100)}

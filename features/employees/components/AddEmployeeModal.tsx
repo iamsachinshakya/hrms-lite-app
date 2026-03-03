@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { Modal } from "../../../components/ui/Modal";
-import { Input, Select } from "../../../components/ui/Input";
-import { Button } from "../../../components/ui/Button";
-import { DEPARTMENTS } from "../../../constants";
+import { Button } from "@/components/ui/Button";
+import { Input, Select } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
+import { DEPARTMENTS } from "@/constants";
+import { useState } from "react";
 
 interface AddEmployeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (data: { id: string; name: string; email: string; department: string }) => void;
+  onAdd: (data: {
+    id: string;
+    name: string;
+    email: string;
+    department: string;
+  }) => void;
   employees: { id: string; email: string }[];
 }
 
@@ -52,7 +57,7 @@ export const AddEmployeeModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Employee">
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div className="flex flex-col gap-4">
         <Input
           label="Employee ID (e.g. EMP005)"
           placeholder="EMP005"
@@ -81,18 +86,18 @@ export const AddEmployeeModal = ({
           value={form.department}
           onChange={(e) => setForm({ ...form, department: e.target.value })}
         />
-        <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <div className="flex gap-3 mt-2">
           <Button
             variant="ghost"
             onClick={onClose}
-            style={{ flex: 1, justifyContent: "center" }}
+            className="flex-1 justify-center"
           >
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
-            style={{ flex: 1, justifyContent: "center" }}
+            className="flex-1 justify-center"
             icon="plus"
           >
             Add Employee

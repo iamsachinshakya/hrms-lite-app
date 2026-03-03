@@ -1,6 +1,5 @@
-import React from "react";
-import { Icon } from "./Icon";
-import { ToastState } from "../../types";
+import { Icon } from "@/components/ui/Icon";
+import { ToastState } from "@/types";
 
 interface ToastProps {
   toast: ToastState | null;
