@@ -15,6 +15,8 @@ interface OverviewSummaryProps {
   onViewAllAttendance: () => void;
 }
 
+import { useEffect, useState } from "react";
+
 export const OverviewSummary = ({
   employees,
   attendance,
@@ -24,6 +26,9 @@ export const OverviewSummary = ({
   statsSummary,
   onViewAllAttendance,
 }: OverviewSummaryProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -191,11 +196,14 @@ export const OverviewSummary = ({
                         {emp?.name}
                       </div>
                       <div className="text-[11px] text-slate-500 font-medium">
-                        {new Date(rec.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric"
-                        })}
+                        {mounted 
+                          ? new Date(rec.date).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric"
+                            })
+                          : rec.date
+                        }
                       </div>
                     </div>
                   </div>

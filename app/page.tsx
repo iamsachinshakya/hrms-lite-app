@@ -188,6 +188,7 @@ export default function Dashboard() {
   };
 
   const onDeleteEmployee = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this employee? This will also remove their attendance records.")) return;
     try {
       const res = await EmployeeService.delete(id);
       if (res.success) {

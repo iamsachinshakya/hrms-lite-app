@@ -8,10 +8,15 @@ interface AttendanceListProps {
   employees: Employee[];
 }
 
+import { useEffect, useState } from "react";
+
 export const AttendanceList = ({
   attendance,
   employees,
 }: AttendanceListProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   if (attendance.length === 0) {
     return (
       <div className="text-center text-slate-500 text-[13px] py-10">
@@ -71,12 +76,15 @@ export const AttendanceList = ({
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-[13px] text-slate-300 font-medium">
-                        {new Date(rec.date).toLocaleDateString("en-US", {
-                          weekday: "short",
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric"
-                        })}
+                        {mounted 
+                          ? new Date(rec.date).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric"
+                            })
+                          : rec.date
+                        }
                       </span>
                       <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">
                         Timestamp: {rec.date}
