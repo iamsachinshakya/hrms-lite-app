@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HRMS Lite - Frontend
 
-## Getting Started
+A modern, high-performance Human Resource Management System dashboard built with Next.js 16 and React 19. This application provides a streamlined interface for managing employee records, tracking attendance, and monitoring organizational metrics.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Dynamic Dashboard**: Real-time overview of total employees, department distribution, and attendance rates.
+- **Employee Management**: Full CRUD operations for employee profiles with instant search and filtering.
+- **Attendance Tracking**: Simplified interface for marking daily attendance and viewing historical logs.
+- **Responsive Analytics**: Visual data representation using custom-built charts (Donut, MiniBar).
+- **Premium UI/UX**: Dark-themed, glassmorphic design with smooth micro-animations and seamless transitions.
+- **Mobile First**: Fully responsive layout optimized for mobile, tablet, and desktop screens.
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Core**: React 19
+- **Styling**: Tailwind CSS 4
+- **Date Handling**: Native JS Date API
+- **Icons**: Lucide Icons integration
+- **HTTP Client**: Axios with centralized error handling
+- **Typography**: Syne (Headers) & DM Sans (Body) via Google Fonts
+
+## 📦 Project Structure
+
+```text
+frontend/
+├── app/                # Next.js App Router (Pages & Layout)
+├── components/         # Shared UI & Layout components
+├── constants/          # Application constants & theme tokens
+├── features/           # Modularized feature components (Employees, Attendance, Dashboard)
+├── hooks/              # Custom React hooks (useWindowWidth, useDebounce)
+├── public/             # Static assets
+├── services/           # API service layer (Axios clients)
+└── types/              # TypeScript interfaces & types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏗 Setup & Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Node.js**: 20.x or higher
+- **Package Manager**: pnpm (recommended), npm, or yarn
 
-## Learn More
+### Steps
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone and Install**:
+   ```bash
+   pnpm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Environment Configuration**:
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_API_URL=https://hrms-lite-api-yaqx.onrender.com/api
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Development Server**:
+   ```bash
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-## Deploy on Vercel
+4. **Build for Production**:
+   ```bash
+   pnpm build
+   pnpm start
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔗 API Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The frontend communicates with a backend API. All requests use JSON.
+
+### Employees
+
+- **`GET /employees`**: List all employees.
+  - Query Params: `search` (name/id), `page`, `limit`.
+- **`GET /employees/:id`**: Get detailed info for a specific employee.
+- **`POST /employees`**: Create a new employee record.
+- **`PATCH /employees/:id`**: Update an existing employee.
+- **`DELETE /employees/:id`**: Remove an employee and their related attendance records.
+
+### Attendance
+
+- **`GET /attendance`**: List attendance logs.
+  - Query Params: `employeeId`, `status` (Present/Absent), `from`, `to`, `page`, `limit`.
+- **`POST /attendance`**: Log attendance for an employee.
+
+### Statistics
+
+- **`GET /stats/summary`**: Get overall HR metrics.
+- **`GET /stats/present-days`**: Get attendance frequency data for distribution charts.
