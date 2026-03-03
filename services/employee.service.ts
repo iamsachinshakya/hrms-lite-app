@@ -11,7 +11,17 @@ export const EmployeeService = {
     },
 
     create: async (data: Partial<Employee>) => {
-        return apiClient.post<any, ApiResponse<Employee>>("/employees", data);
+        const { id, ...rest } = data;
+
+        const payload = {
+            ...rest,
+            employeeId: id,
+        };
+
+        return apiClient.post<any, ApiResponse<Employee>>(
+            "/employees",
+            payload
+        );
     },
 
     update: async (id: string, data: Partial<Employee>) => {
