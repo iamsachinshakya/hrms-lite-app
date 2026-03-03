@@ -1,6 +1,7 @@
-# HRMS Lite - Frontend
+## ⚖️ Assumptions & Limitations
 
-A modern, high-performance Human Resource Management System dashboard built with Next.js 16 and React 19. This application provides a streamlined interface for managing employee records, tracking attendance, and monitoring organizational metrics.
+- **State Management**: Uses local component state and Prop Drilling for simplicity, as the app's scope doesn't yet require a global state manager like Redux or Zustand.
+- **Auth**: Currently designed as a public-access dashboard (No Login/Sign-up flow implemented).
 
 ## 🚀 Key Features
 
@@ -14,13 +15,14 @@ A modern, high-performance Human Resource Management System dashboard built with
 ## 🛠 Tech Stack
 
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
-- **Core**: React 19
-- **Styling**: Tailwind CSS 4
-- **Date Handling**: Native JS Date API
+- **Core**: React 19 
+- **Styling**: Tailwind CSS
+- **Backend**: Node.js, Express.js, 
+- **ORM**: Mongoose,
+- **Validation**: Zod,
+- **Database**: MongoDB
 - **Icons**: Lucide Icons integration
 - **HTTP Client**: Axios with centralized error handling
-- **Typography**: Syne (Headers) & DM Sans (Body) via Google Fonts
-
 ## 📦 Project Structure
 
 ```text
@@ -52,7 +54,7 @@ frontend/
 2. **Environment Configuration**:
    Create a `.env.local` file in the root directory:
    ```env
-   NEXT_PUBLIC_API_URL=https://hrms-lite-api-yaqx.onrender.com/api
+   NEXT_PUBLIC_API_URL=https://hrms-lite-api-yaqx.onrender.com/api/v1
    ```
 
 3. **Development Server**:
@@ -66,6 +68,14 @@ frontend/
    pnpm build
    pnpm start
    ```
+
+## 📋 Requirements Fulfilled
+
+This project includes:
+- **Project overview**: Clearly documented in the header and features list.
+- **Tech stack used**: Detailed breakdown in the Technology Stack section.
+- **Steps to run locally**: Step-by-step setup guide provided above.
+- **Assumptions or limitations**: Documented in the dedicated section below.
 
 ## 🔗 API Documentation
 
