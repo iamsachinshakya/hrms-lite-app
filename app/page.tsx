@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "../components/layout/Header";
 import { StatsGrid } from "../components/layout/StatsGrid";
 import { OverviewSummary } from "../features/dashboard/components/OverviewSummary";
@@ -120,6 +120,11 @@ export default function Dashboard() {
 
   const hasFilters = !!(fFrom || fTo || fEmp !== "all" || fStat !== "all");
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // ── Handlers ─────────────────────────────────────────────────────────────
   const onAddEmployee = (data: { id: string; name: string; email: string; department: string }) => {
     const emp: Employee = {
@@ -214,12 +219,12 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 mt-1">
               <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
               <p className="text-slate-500 text-[13px] font-bold uppercase tracking-[0.2em]">
-                {new Date().toLocaleDateString("en-US", {
+                {mounted ? new Date().toLocaleDateString("en-US", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })}
+                }) : "Loading..."}
               </p>
             </div>
           </div>
