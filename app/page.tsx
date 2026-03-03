@@ -1,39 +1,39 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { Header } from "../components/layout/Header";
-import { StatsGrid } from "../components/layout/StatsGrid";
-import { OverviewSummary } from "../features/dashboard/components/OverviewSummary";
-import { EmployeeList } from "../features/employees/components/EmployeeList";
-import { AddEmployeeModal } from "../features/employees/components/AddEmployeeModal";
-import { AttendanceList } from "../features/attendance/components/AttendanceList";
-import { MarkAttendanceModal } from "../features/attendance/components/MarkAttendanceModal";
-import { AttendanceFilters } from "../features/attendance/components/AttendanceFilters";
-import { Toast } from "../components/ui/Toast";
-import { Icon } from "../components/ui/Icon";
-import { useWindowWidth } from "../hooks/useWindowWidth";
-import {
-  INITIAL_EMPLOYEES,
-  INITIAL_ATTENDANCE,
-} from "../constants";
-import {
-  Employee,
-  AttendanceRecord,
-  ActiveTab,
-  ToastState,
-} from "../types";
+import { Header } from "@/components/layout/Header";
+import { StatsGrid } from "@/components/layout/StatsGrid";
+import { Icon } from "@/components/ui/Icon";
+import { Toast } from "@/components/ui/Toast";
+import { INITIAL_ATTENDANCE, INITIAL_EMPLOYEES } from "@/constants";
+import { AttendanceFilters } from "@/features/attendance/components/AttendanceFilters";
+import { AttendanceList } from "@/features/attendance/components/AttendanceList";
+import { MarkAttendanceModal } from "@/features/attendance/components/MarkAttendanceModal";
+import { OverviewSummary } from "@/features/dashboard/components/OverviewSummary";
+import { AddEmployeeModal } from "@/features/employees/components/AddEmployeeModal";
+import { EmployeeList } from "@/features/employees/components/EmployeeList";
+import { useWindowWidth } from "@/hooks/useWindowWidth";
+import { ActiveTab, AttendanceRecord, Employee, StatsSummary, ToastState } from "@/types";
+import { useEffect, useMemo, useState } from "react";
+import { EmployeeService } from "@/services/employee.service";
+import { AttendanceService } from "@/services/attendance.service";
+import { StatsService } from "@/services/stats.service";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Dashboard() {
   const w = useWindowWidth();
   const isMobile = w < 640;
   const isTablet = w >= 640 && w < 1024;
 
-  const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
-  const [attendance, setAttendance] = useState<AttendanceRecord[]>(INITIAL_ATTENDANCE);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+  const [statsSummary, setStatsSummary] = useState<StatsSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedEmpForAtt, setSelectedEmpForAtt] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
 
   // UI state
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [showAddEmp, setShowAddEmp] = useState(false);
   const [showAtt, setShowAtt] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -52,7 +52,7 @@ export default function Dashboard() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ── Computed ─────────────────────────────────────────────────────────────
+  // Computed
   const todayPresent = attendance.filter(
     (a) => a.date === today && a.status === "Present",
   ).length;
@@ -79,7 +79,7 @@ export default function Dashboard() {
     employees.forEach((e) => {
       map[e.department] = (map[e.department] || 0) + 1;
     });
-    
+
     const DEPT_COLORS: Record<string, string> = {
       Engineering: "#6366f1",
       Design: "#ec4899",
@@ -111,73 +111,136 @@ export default function Dashboard() {
     () =>
       employees.filter(
         (e) =>
-          e.name.toLowerCase().includes(search.toLowerCase()) ||
-          e.id.toLowerCase().includes(search.toLowerCase()) ||
-          e.department.toLowerCase().includes(search.toLowerCase()),
+          e.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          e.id.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          e.department.toLowerCase().includes(debouncedSearch.toLowerCase()),
       ),
-    [employees, search],
+    [employees, debouncedSearch],
   );
 
   const hasFilters = !!(fFrom || fTo || fEmp !== "all" || fStat !== "all");
 
   const [mounted, setMounted] = useState(false);
+  
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      const [empRes, attRes, statsRes] = await Promise.all([
+        EmployeeService.getAll(),
+        AttendanceService.getAll({ limit: 100 }), // Get recent records
+        StatsService.getSummary()
+      ]);
+      
+      if (empRes.success) setEmployees(empRes.data);
+      if (attRes.success) setAttendance(attRes.data);
+      if (statsRes.success) setStatsSummary(statsRes.data);
+    } catch (err: any) {
+      showToast(err.message || "Failed to fetch data", "err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
+    refreshData();
   }, []);
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
-  const onAddEmployee = (data: { id: string; name: string; email: string; department: string }) => {
-    const emp: Employee = {
-      ...data,
-      joinDate: today,
+  // Effect to re-fetch attendance when filters change (if we wanted server-side filtering)
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const fetchFilteredAttendance = async () => {
+      try {
+        const res = await AttendanceService.getAll({
+          from: fFrom,
+          to: fTo,
+          employeeId: fEmp,
+          status: fStat,
+          limit: 100
+        });
+        if (res.success) setAttendance(res.data);
+      } catch (err: any) {
+        showToast(err.message || "Filter failed", "err");
+      }
     };
-    setEmployees((p) => [...p, emp]);
-    setShowAddEmp(false);
-    showToast(`${emp.name} added!`);
-  };
 
-  const onDeleteEmployee = (id: string) => {
-    const emp = employees.find((e) => e.id === id);
-    setEmployees((p) => p.filter((e) => e.id !== id));
-    setAttendance((p) => p.filter((a) => a.employeeId !== id));
-    showToast(`${emp?.name} removed`, "err");
-  };
+    fetchFilteredAttendance();
+  }, [fFrom, fTo, fEmp, fStat]);
 
-  const onMarkAttendance = (data: { employeeId: string; date: string; status: "Present" | "Absent" }) => {
-    if (attendance.find((a) => a.employeeId === data.employeeId && a.date === data.date)) {
-        showToast("Already marked for this date", "err");
-        return;
+  // Handlers
+  const onAddEmployee = async (data: {
+    id: string;
+    name: string;
+    email: string;
+    department: string;
+  }) => {
+    try {
+      const res = await EmployeeService.create(data);
+      if (res.success) {
+        setShowAddEmp(false);
+        showToast(`${res.data.name} added!`);
+        refreshData(); // Refresh everything
+      }
+    } catch (err: any) {
+      showToast(err.message, "err");
     }
-    setAttendance((p) => [...p, data]);
-    const emp = employees.find((e) => e.id === data.employeeId);
-    showToast(`${data.status} marked for ${emp?.name}`);
+  };
+
+  const onDeleteEmployee = async (id: string) => {
+    try {
+      const res = await EmployeeService.delete(id);
+      if (res.success) {
+        showToast("Employee removed", "err");
+        refreshData();
+      }
+    } catch (err: any) {
+      showToast(err.message, "err");
+    }
+  };
+
+  const onMarkAttendance = async (data: {
+    employeeId: string;
+    date: string;
+    status: "Present" | "Absent";
+  }) => {
+    try {
+      const res = await AttendanceService.mark(data);
+      if (res.success) {
+        setShowAtt(false);
+        showToast(`${data.status} marked successfully`);
+        refreshData();
+      }
+    } catch (err: any) {
+      showToast(err.message, "err");
+    }
   };
 
   const stats = [
     {
       label: "Total Employees",
-      value: employees.length,
+      value: statsSummary?.totalEmployees || 0,
       icon: "users" as const,
       color: "#6366f1",
       sub: "Active headcount",
     },
     {
       label: "Departments",
-      value: deptSummary.length,
+      value: statsSummary?.totalDepartments || 0,
       icon: "dept" as const,
       color: "#8b5cf6",
       sub: "Active departments",
     },
     {
       label: "Present Today",
-      value: todayPresent,
+      value: statsSummary?.todayPresent || 0,
       icon: "check" as const,
       color: "#10b981",
-      sub: `of ${employees.length}`,
+      sub: `of ${statsSummary?.totalEmployees || 0}`,
     },
     {
       label: "Absent Today",
-      value: todayAbsent,
+      value: statsSummary?.todayAbsent || 0,
       icon: "x" as const,
       color: "#ef4444",
       sub: "Marked absent",
@@ -219,12 +282,14 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 mt-1">
               <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
               <p className="text-slate-500 text-[13px] font-bold uppercase tracking-[0.2em]">
-                {mounted ? new Date().toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }) : "Loading..."}
+                {mounted
+                  ? new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Loading..."}
               </p>
             </div>
           </div>
@@ -234,7 +299,14 @@ export default function Dashboard() {
           <StatsGrid stats={stats} isMobile={isMobile} />
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 relative min-h-[400px]">
+          {loading && (
+            <div className="absolute inset-x-0 top-0 pt-20 flex flex-col items-center justify-center gap-4 z-10 animate-fade-in bg-[#06090f]/50 backdrop-blur-sm rounded-3xl h-full">
+              <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin shadow-lg shadow-indigo-500/10" />
+              <span className="text-[12px] font-bold text-slate-400 uppercase tracking-widest animate-pulse">Syncing workforce engine...</span>
+            </div>
+          )}
+
           {activeTab === "overview" && (
             <OverviewSummary
               employees={employees}
@@ -242,6 +314,7 @@ export default function Dashboard() {
               deptSummary={deptSummary}
               presentDaysMap={presentDaysMap}
               maxPresent={maxPresent}
+              statsSummary={statsSummary}
               onViewAllAttendance={() => setActiveTab("attendance")}
             />
           )}
@@ -258,9 +331,7 @@ export default function Dashboard() {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search members by name, ID or department..."
                 />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-30 group-focus-within:opacity-100 transition-opacity">
-                  <span className="text-[10px] font-bold bg-white/10 px-1.5 py-0.5 rounded border border-white/10">ESC</span>
-                </div>
+               
               </div>
 
               <EmployeeList
@@ -268,6 +339,10 @@ export default function Dashboard() {
                 presentDaysMap={presentDaysMap}
                 maxPresent={maxPresent}
                 onDelete={onDeleteEmployee}
+                onRowClick={(id) => {
+                  setSelectedEmpForAtt(id);
+                  setShowAtt(true);
+                }}
                 isMobile={isMobile}
                 isTablet={isTablet}
               />
@@ -313,9 +388,13 @@ export default function Dashboard() {
 
       <MarkAttendanceModal
         isOpen={showAtt}
-        onClose={() => setShowAtt(false)}
+        onClose={() => {
+          setShowAtt(false);
+          setSelectedEmpForAtt(null);
+        }}
         onMark={onMarkAttendance}
         employees={employees}
+        selectedEmployeeId={selectedEmpForAtt}
       />
 
       <Toast toast={toast} />

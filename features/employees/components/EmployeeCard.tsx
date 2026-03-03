@@ -11,6 +11,7 @@ interface EmployeeCardProps {
   presentDays: number;
   maxPresent: number;
   onDelete: (id: string) => void;
+  onClick?: () => void;
   isMobile: boolean;
 }
 
@@ -19,12 +20,16 @@ export const EmployeeCard = ({
   presentDays,
   maxPresent,
   onDelete,
+  onClick,
   isMobile,
 }: EmployeeCardProps) => {
   const deptColor = DEPT_COLORS[employee.department] || "#6366f1";
 
   return (
-    <Card className="p-5 card hover-lift animate-fade-in flex flex-col gap-4">
+    <Card 
+      onClick={onClick}
+      className="p-5 card hover-lift animate-fade-in flex flex-col gap-4 cursor-pointer"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
@@ -45,7 +50,10 @@ export const EmployeeCard = ({
           </div>
         </div>
         <button
-          onClick={() => onDelete(employee.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(employee.id);
+          }}
           className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95 border border-red-500/10"
         >
           <Icon name="trash" size={16} />

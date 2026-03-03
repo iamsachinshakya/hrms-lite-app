@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { Input, Select } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { Employee } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface MarkAttendanceModalProps {
   isOpen: boolean;
@@ -13,6 +13,7 @@ interface MarkAttendanceModalProps {
     status: "Present" | "Absent";
   }) => void;
   employees: Employee[];
+  selectedEmployeeId?: string | null;
 }
 
 export const MarkAttendanceModal = ({
@@ -20,6 +21,7 @@ export const MarkAttendanceModal = ({
   onClose,
   onMark,
   employees,
+  selectedEmployeeId,
 }: MarkAttendanceModalProps) => {
   const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
@@ -27,6 +29,17 @@ export const MarkAttendanceModal = ({
     date: today,
     status: "Present" as "Present" | "Absent",
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      setForm((f) => ({
+        ...f,
+        employeeId: selectedEmployeeId || "",
+        date: today,
+      }));
+    }
+  }, [isOpen, selectedEmployeeId, today]);
+
   const [err, setErr] = useState("");
 
   const handleSubmit = () => {

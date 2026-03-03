@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { DonutChart, MiniBar } from "@/components/ui/Charts";
 import { Icon } from "@/components/ui/Icon";
+import { AttendanceRecord, ChartData, Employee, StatsSummary } from "@/types";
 import { DEPT_COLORS } from "@/constants";
-import { AttendanceRecord, ChartData, Employee } from "@/types";
 
 interface OverviewSummaryProps {
   employees: Employee[];
@@ -11,6 +11,7 @@ interface OverviewSummaryProps {
   deptSummary: ChartData[];
   presentDaysMap: Record<string, number>;
   maxPresent: number;
+  statsSummary: StatsSummary | null;
   onViewAllAttendance: () => void;
 }
 
@@ -20,6 +21,7 @@ export const OverviewSummary = ({
   deptSummary,
   presentDaysMap,
   maxPresent,
+  statsSummary,
   onViewAllAttendance,
 }: OverviewSummaryProps) => {
   return (
@@ -53,12 +55,12 @@ export const OverviewSummary = ({
               data={[
                 {
                   label: "Present",
-                  value: attendance.filter((a) => a.status === "Present").length,
+                  value: statsSummary?.allTimePresent || 0,
                   color: "#10b981",
                 },
                 {
                   label: "Absent",
-                  value: attendance.filter((a) => a.status === "Absent").length,
+                  value: statsSummary?.allTimeAbsent || 0,
                   color: "#f43f5e",
                 },
               ]}

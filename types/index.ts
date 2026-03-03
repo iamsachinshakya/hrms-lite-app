@@ -7,9 +7,43 @@ export interface Employee {
 }
 
 export interface AttendanceRecord {
+    id?: string;
     employeeId: string;
     date: string;
     status: "Present" | "Absent";
+}
+
+export interface StatsSummary {
+    totalEmployees: number;
+    totalDepartments: number;
+    todayPresent: number;
+    todayAbsent: number;
+    allTimePresent: number;
+    allTimeAbsent: number;
+}
+
+export interface PresentDaysStats {
+    employeeId: string;
+    presentDays: number;
+    totalRecords: number;
+    rate: number;
+}
+
+export interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+}
+
+export interface ApiListResponse<T> {
+    success: boolean;
+    message: string;
+    data: T[];
+    meta?: {
+        total: number;
+        page: number;
+        limit: number;
+    };
 }
 
 export type ActiveTab = "overview" | "employees" | "attendance";

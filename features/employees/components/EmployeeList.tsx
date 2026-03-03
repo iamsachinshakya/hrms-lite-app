@@ -11,6 +11,7 @@ interface EmployeeListProps {
   presentDaysMap: Record<string, number>;
   maxPresent: number;
   onDelete: (id: string) => void;
+  onRowClick?: (id: string) => void;
   isMobile: boolean;
   isTablet: boolean;
 }
@@ -20,6 +21,7 @@ export const EmployeeList = ({
   presentDaysMap,
   maxPresent,
   onDelete,
+  onRowClick,
   isMobile,
   isTablet,
 }: EmployeeListProps) => {
@@ -85,7 +87,8 @@ export const EmployeeList = ({
               return (
                 <tr
                   key={emp.id}
-                  className="hover:bg-white/[0.04] transition-all duration-200 group/row"
+                  onClick={() => onRowClick?.(emp.id)}
+                  className="hover:bg-white/[0.04] transition-all duration-200 group/row cursor-pointer"
                 >
                   {!isTablet && (
                     <td className="px-6 py-4 text-[12px] font-syne font-bold text-indigo-400 opacity-80 group-hover/row:opacity-100 transition-opacity">
@@ -142,7 +145,10 @@ export const EmployeeList = ({
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button
-                      onClick={() => onDelete(emp.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(emp.id);
+                      }}
                       className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 opacity-40 group-hover/row:opacity-100 hover:scale-110 shadow-lg shadow-red-500/0 hover:shadow-red-500/20"
                     >
                       <Icon name="trash" size={14} />
