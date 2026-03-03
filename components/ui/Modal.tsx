@@ -24,7 +24,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             <Icon name="close" size={18} />
           </button>
         </div>
-        <div className="animate-fade-in [animation-delay:150ms]">
+        <div className="animate-fade-in">
           {children}
         </div>
       </div>

@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { StatsGrid } from "@/components/layout/StatsGrid";
 import { Icon } from "@/components/ui/Icon";
 import { Toast } from "@/components/ui/Toast";
-import { INITIAL_ATTENDANCE, INITIAL_EMPLOYEES } from "@/constants";
+import { INITIAL_ATTENDANCE, INITIAL_EMPLOYEES, ITEMS_PER_PAGE } from "@/constants";
 import { AttendanceFilters } from "@/features/attendance/components/AttendanceFilters";
 import { AttendanceList } from "@/features/attendance/components/AttendanceList";
 import { MarkAttendanceModal } from "@/features/attendance/components/MarkAttendanceModal";
@@ -21,13 +21,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Dashboard() {
   const w = useWindowWidth();
-  const isMobile = w < 640;
-  const isTablet = w >= 640 && w < 1024;
+  const isMobile = w !== null && w < 640;
+  const isTablet = w !== null && w >= 640 && w < 1024;
 
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [statsSummary, setStatsSummary] = useState<StatsSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoaded, setInitialLoaded] = useState(false);
   const [selectedEmpForAtt, setSelectedEmpForAtt] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
 
@@ -127,7 +128,7 @@ export default function Dashboard() {
       setLoading(true);
       const [empRes, attRes, statsRes] = await Promise.all([
         EmployeeService.getAll(),
-        AttendanceService.getAll({ limit: 100 }), // Get recent records
+        AttendanceService.getAll({ limit: ITEMS_PER_PAGE }), // Get recent records
         StatsService.getSummary()
       ]);
       
@@ -138,6 +139,7 @@ export default function Dashboard() {
       showToast(err.message || "Failed to fetch data", "err");
     } finally {
       setLoading(false);
+      setInitialLoaded(true);
     }
   };
 
@@ -223,7 +225,7 @@ export default function Dashboard() {
       value: statsSummary?.totalEmployees || 0,
       icon: "users" as const,
       color: "#6366f1",
-      sub: "Active headcount",
+      sub: loading ? "Updating..." : "Active headcount",
     },
     {
       label: "Departments",
@@ -296,7 +298,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="animate-slide-up [animation-delay:100ms]">
+        <div className="animate-slide-up transition-opacity duration-500" style={{ opacity: w === null ? 0 : 1 }}>
           <StatsGrid stats={stats} isMobile={isMobile} />
         </div>
 
@@ -309,19 +311,21 @@ export default function Dashboard() {
           )}
 
           {activeTab === "overview" && (
-            <OverviewSummary
-              employees={employees}
-              attendance={attendance}
-              deptSummary={deptSummary}
-              presentDaysMap={presentDaysMap}
-              maxPresent={maxPresent}
-              statsSummary={statsSummary}
-              onViewAllAttendance={() => setActiveTab("attendance")}
-            />
+            <div className="animate-slide-up">
+              <OverviewSummary
+                employees={employees}
+                attendance={attendance}
+                deptSummary={deptSummary}
+                presentDaysMap={presentDaysMap}
+                maxPresent={maxPresent}
+                statsSummary={statsSummary}
+                onViewAllAttendance={() => setActiveTab("attendance")}
+              />
+            </div>
           )}
 
           {activeTab === "employees" && (
-            <div className="animate-slide-up [animation-delay:200ms]">
+            <div className="animate-slide-up">
               <div className="mb-6 relative group">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10 transition-colors group-focus-within:text-indigo-400">
                   <Icon name="search" size={18} />
@@ -351,7 +355,7 @@ export default function Dashboard() {
           )}
 
           {activeTab === "attendance" && (
-            <div className="animate-slide-up [animation-delay:200ms]">
+            <div className="animate-slide-up">
               <AttendanceFilters
                 fFrom={fFrom}
                 setFFrom={setFFrom}

@@ -1,5 +1,8 @@
 import { AttendanceRecord, Employee } from "@/types";
 
+
+export const ITEMS_PER_PAGE = 100;
+
 export const INITIAL_EMPLOYEES: Employee[] = [
     {
         id: "EMP001",

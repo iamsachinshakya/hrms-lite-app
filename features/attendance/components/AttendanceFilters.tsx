@@ -30,7 +30,7 @@ export const AttendanceFilters = ({
   hasFilters,
 }: AttendanceFiltersProps) => {
   return (
-    <div className="flex flex-wrap gap-4 items-end mb-8 bg-white/[0.02] border border-white/[0.05] p-5 rounded-3xl animate-fade-in backdrop-blur-md shadow-xl">
+    <div className="flex flex-wrap gap-4 items-end mb-8 bg-white/[0.02] border border-white/[0.05] p-5 rounded-3xl backdrop-blur-md shadow-xl">
       <div className="flex flex-col gap-1.5 flex-1 min-w-[140px]">
         <Input
           label="From Date"

@@ -51,7 +51,7 @@ export const EmployeeList = ({
   }
 
   return (
-    <Card className="card overflow-hidden animate-fade-in border-white/[0.05]">
+    <Card className="card overflow-hidden border-white/[0.05]">
       <div className="overflow-x-auto scrollbar-hide">
         <table className={`w-full border-collapse ${isTablet ? "min-w-[500px]" : "min-w-[800px]"}`}>
           <thead>

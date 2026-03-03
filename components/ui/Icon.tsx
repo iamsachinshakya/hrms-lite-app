@@ -17,6 +17,8 @@ export const ICONS = {
   dept: "M2 7l5-4 5 4 5-4 5 4M2 7v13h20V7",
   menu: "M3 6h18M3 12h18M3 18h18",
   close: "M18 6L6 18M6 6l12 12",
+  "chevron-left": "m15 18-6-6 6-6",
+  "chevron-right": "m9 18 6-6-6-6",
 } as const;
 
 export type IconName = keyof typeof ICONS;

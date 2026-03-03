@@ -20,7 +20,7 @@ export const StatsGrid = ({ stats, isMobile }: StatsGridProps) => {
       {stats.map((c) => (
         <Card
           key={c.label}
-          className="p-5 sm:p-6 relative overflow-hidden card hover-lift animate-slide-up"
+          className="p-5 sm:p-6 relative overflow-hidden card hover-lift"
         >
           {/* Decorative background glow */}
           <div

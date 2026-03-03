@@ -32,7 +32,7 @@ export const OverviewSummary = ({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className="p-6 card hover-lift animate-slide-up [animation-delay:100ms]">
+        <Card className="p-6 card hover-lift">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-indigo-500/20 text-indigo-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 border border-indigo-500/20">
               <Icon name="dept" size={14} />
@@ -46,7 +46,7 @@ export const OverviewSummary = ({
           </div>
         </Card>
 
-        <Card className="p-6 card hover-lift animate-slide-up [animation-delay:200ms]">
+        <Card className="p-6 card hover-lift">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-emerald-500/20 text-emerald-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/10 border border-emerald-500/20">
               <Icon name="calendar" size={14} />
@@ -74,7 +74,7 @@ export const OverviewSummary = ({
         </Card>
       </div>
 
-      <Card className="p-6 mb-8 card animate-slide-up [animation-delay:300ms]">
+      <Card className="p-6 mb-8 card">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-amber-500/20 text-amber-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/10 border border-amber-500/20">
             <Icon name="star" size={14} />
@@ -151,7 +151,7 @@ export const OverviewSummary = ({
         </div>
       </Card>
 
-      <Card className="p-6 card animate-slide-up [animation-delay:400ms]">
+      <Card className="p-6 card">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="bg-blue-500/20 text-blue-400 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/10 border border-blue-500/20">
