@@ -1,6 +1,6 @@
 ## ⚖️ Assumptions & Limitations
 
-- **State Management**: Uses local component state and Prop Drilling for simplicity, as the app's scope doesn't yet require a global state manager like Redux or Zustand.
+- **State Management**:  Uses local component state and Prop Drilling for simplicity, as the app's scope doesn't yet require a global state manager like Redux or Zustand.
 - **Auth**: Currently designed as a public-access dashboard (No Login/Sign-up flow implemented).
 
 ## 🚀 Key Features
